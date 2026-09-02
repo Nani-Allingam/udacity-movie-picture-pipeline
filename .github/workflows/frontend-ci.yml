@@ -1,0 +1,41 @@
+name: Frontend Continous Integration
+
+on:
+  pull_request:
+    branches:
+      -master
+    paths:
+      - "starter/frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+  
+  workflow_dispatch:
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run: 
+        working-directory: starter/frontend
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.14"
+          cache: npm
+          cache-dependency-path: starter/frontend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Tests
+        run: CI=true npm test
+
+      - name: Build Frontend
+        env:
+          REACT_APP_MOVIE_API_URL: http://localhost:5000
+        run: npm run build
