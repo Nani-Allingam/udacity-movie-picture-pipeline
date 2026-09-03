@@ -1,13 +1,13 @@
-name: Frontend Continous Integration
+name: Frontend Continuous Integration
 
 on:
   pull_request:
     branches:
-      -master
+      - master
     paths:
       - "starter/frontend/**"
       - ".github/workflows/frontend-ci.yml"
-  
+
   workflow_dispatch:
 
 jobs:
@@ -15,16 +15,17 @@ jobs:
     runs-on: ubuntu-latest
 
     defaults:
-      run: 
+      run:
         working-directory: starter/frontend
-    
+
     steps:
       - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18.14"
-          cache: npm
-          cache-dependency-path: starter/frontend/package-lock.json
+          node-version: "18"
 
       - name: Install Dependencies
         run: npm ci
@@ -38,4 +39,4 @@ jobs:
       - name: Build Frontend
         env:
           REACT_APP_MOVIE_API_URL: http://localhost:5000
-        run: npm run build
+        run: npm run build 
